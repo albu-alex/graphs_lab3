@@ -11,8 +11,6 @@ class DictionaryGraph:
         self.costs = {}
         for i in range(n):
             self.dictionary[i] = []
-            for j in range(n):
-                self.costs[(i, j)] = None
 
     def is_edge(self, x, y):
         return y in self.dictionary[x]
@@ -28,19 +26,25 @@ class DictionaryGraph:
         return self.dictionary.keys()
 
     def dijkstra_algorithm(self, source, destination):
+        shortest_path = []
         distance = [sys.maxsize] * self.vertices
         distance[source] = 0
         node_cost = {source: 0}
         while node_cost:
             source_node = min(node_cost, key=lambda x: node_cost[x])
+            shortest_path.append(source_node)
             del node_cost[source_node]
 
-            if self.costs[(source_node, destination)] is not None:
-                if distance[destination] > distance[source_node] + self.costs[(source_node, destination)]:
-                    distance[destination] = distance[source_node] + self.costs[(source_node, destination)]
-                    node_cost[destination] = distance[destination]
+            for node in self.dictionary[source_node]:
+                if distance[node] > distance[source_node] + self.costs[(source_node, node)]:
+                    distance[node] = distance[source_node] + self.costs[(source_node, node)]
+                    node_cost[node] = distance[node]
 
-        print("The distance from", source, "to", destination, "is:", distance[destination])
+        if distance[destination] == sys.maxsize:
+            print("Node is unreachable!")
+        else:
+            print(*shortest_path)
+            print("The distance from", source, "to", destination, "is:", distance[destination])
 
 
 class MainProgram:
@@ -54,7 +58,7 @@ class MainProgram:
             self.g.add_edge(x, y, cost)
 
     def run(self):
-        self.g.dijkstra_algorithm(0, 4)
+        self.g.dijkstra_algorithm(1, 4)
 
 
 program = MainProgram()
