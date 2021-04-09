@@ -42,18 +42,19 @@ class DictionaryGraph:
                     distance[node] = distance[source_node] + self.costs[(source_node, node)]
                     node_cost[node] = distance[node]
 
-        path = []
-        current_node = destination
-        while current_node is not None:
-            path.append(current_node)
-            next_node = shortest_paths[current_node]
-            current_node = next_node
-
-        path = path[::-1]
-
         if distance[destination] == sys.maxsize:
             print("Node is unreachable!")
+
         else:
+            path = []
+            current_node = destination
+            while current_node is not None:
+                path.append(current_node)
+                next_node = shortest_paths[current_node]
+                current_node = next_node
+
+            path = path[::-1]
+
             print(*path)
             print("The distance from", source, "to", destination, "is:", distance[destination])
 
@@ -70,6 +71,7 @@ class MainProgram:
 
     def run(self):
         self.g.dijkstra_algorithm(0, 5)
+        self.g.dijkstra_algorithm(0, 6)
 
 
 program = MainProgram()
